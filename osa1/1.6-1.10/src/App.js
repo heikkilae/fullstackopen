@@ -10,6 +10,27 @@ const Stat = ({ text, value }) => {
   )
 }
 
+const Statistics = ({ stats }) => {
+  const [good, neutral, bad, goodStr, neutralStr, badStr] = stats
+  const all = good + neutral + bad
+  const goodValue = good * 1, neutralValue = neutral * 0, badValue = bad * -1
+  const avg = (goodValue + neutralValue + badValue) / all
+  const positive = good / all * 100
+
+  return (
+    <div>
+      <h1>Statistics</h1>
+      <Stat text={goodStr} value={good}/>
+      <Stat text={neutralStr} value={neutral}/>
+      <Stat text={badStr} value={bad}/>
+
+      <Stat text='all' value={all} />
+      <Stat text='average' value={avg} />
+      <Stat text='positive' value={positive + ' %'} />
+    </div>
+  )
+}
+
 const App = () => {
   // tallenna napit omaan tilaansa
   const [good, setGood] = useState(0)
@@ -17,11 +38,6 @@ const App = () => {
   const [bad, setBad] = useState(0)
 
   const goodStr = 'good', neutralStr =  'neutral', badStr = 'bad'
-
-  const all = good + neutral + bad
-  const goodValue = good * 1, neutralValue = neutral * 0, badValue = bad * -1
-  const avg = (goodValue + neutralValue + badValue) / all
-  const positive = good / all * 100
 
   return (
     <div>
@@ -32,14 +48,8 @@ const App = () => {
       <Button text={neutralStr} handleClick={() => setNeutral(neutral + 1)}/>
       <Button text={badStr} handleClick={() => setBad(bad + 1)}/>
 
-      <h1>Statistics</h1>
-      <Stat text={goodStr} value={good}/>
-      <Stat text={neutralStr} value={neutral}/>
-      <Stat text={badStr} value={bad}/>
+      <Statistics stats={[good, neutral, bad, goodStr, neutralStr, badStr]} />
 
-      <Stat text='all' value={all} />
-      <Stat text='average' value={avg} />
-      <Stat text='positive' value={positive + ' %'} />
     </div>
   )
 }
