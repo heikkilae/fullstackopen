@@ -33,17 +33,15 @@ const Total = (props) => {
 }
 
 const Course = ({ course }) => {
-  let count = 0
-
-  course.parts.forEach(part => {
-    count += part.exercises
-  });
+  const exercises = course.parts.map(part => part.exercises)
+  const reducer = (previousValue, currentValue) => previousValue + currentValue
+  const total = exercises.reduce(reducer)
 
   return (
     <div>
       <Header course={course.name} />
       <Content parts={course.parts} />
-      <Total count={count} />
+      <Total count={total} />
     </div>
   )
 }
