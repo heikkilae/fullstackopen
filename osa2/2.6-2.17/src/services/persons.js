@@ -16,7 +16,7 @@ const create = newObject => {
 }
 
 const remove = id => {
-    const request = axios.delete(`${baseUrl}/${id+1}`)
+    const request = axios.delete(`${baseUrl}/${id}`)
     return request.then(response => response)
 }
 
