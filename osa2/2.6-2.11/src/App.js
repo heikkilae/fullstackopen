@@ -32,8 +32,8 @@ const App = () => {
       return
     }
     const newPerson = { name: newName, number: newNumber }
-    personsService.create(newPerson).then(addedPerson => {
-      setPersons(persons.concat(addedPerson))
+    personsService.create(newPerson).then(createdPerson => {
+      setPersons(persons.concat(createdPerson))
       setNewName('')
       setNewNumber('')
     })
@@ -50,6 +50,23 @@ const App = () => {
     setFilter(event.target.value)
   }
 
+  const handleDelete = id => {
+    const desiredPersonToDelete = persons.find(person => person.id === id)
+    console.log(`You are about to delete ${desiredPersonToDelete.name}`)
+    if (window.confirm(`Delete ${desiredPersonToDelete.name}?`)) {
+      personsService.remove(id).then(res => {
+        setPersons(persons.filter(p => p.id !== id))
+      })
+      .catch(error => {
+        alert(
+          `Cannot remove '${desiredPersonToDelete.name}' since not found from server`
+        )
+        setPersons(persons.filter(p => p.id !== id))
+      })
+    }
+
+  }
+
   return (
     <div>
       <h2>Phonebook</h2>
@@ -62,7 +79,7 @@ const App = () => {
                   handleSubmit={handleSubmit} />
                   
       <h2>Numbers</h2>
-      <Persons persons={filteredPersons}/>
+      <Persons persons={filteredPersons} deleteHandler={handleDelete}/>
     </div>
   )
 
