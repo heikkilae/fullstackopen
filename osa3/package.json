@@ -1,0 +1,37 @@
+{
+  "name": "puhelinluettelobackend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build:ui": "rm -rf build && cd ../persons-frontend/ && npm run build --prod && cp -r build ../persons-backend",
+    "deploy": "git push heroku main",
+    "logs:prod": "heroku logs --tail",
+    "lint": "eslint ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/heikkilae/fullstackopen_osa3.git"
+  },
+  "author": "Antti Heikkilä",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/heikkilae/fullstackopen_osa3/issues"
+  },
+  "homepage": "https://github.com/heikkilae/fullstackopen_osa3#readme",
+  "devDependencies": {
+    "eslint": "^8.3.0",
+    "nodemon": "^2.0.15"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "mongoose": "^6.0.13",
+    "mongoose-unique-validator": "^3.0.0",
+    "morgan": "^1.10.0"
+  }
+}
