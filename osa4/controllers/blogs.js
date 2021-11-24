@@ -19,4 +19,16 @@ blogsRouter.post('/', (request, response) => {
     })
 })
 
+blogsRouter.delete('/:id', async (request, response) => {
+  // Async/await requires try-catch exception handling.
+  // can be also handled with https://github.com/davidbanham/express-async-errors
+  try {
+    await Blog.findByIdAndRemove(request.params.id)
+    response.status(204).end()
+  }  catch (exception) {
+    console.log("=DEBUG=")
+    next(exception)
+  }
+})
+
 module.exports = blogsRouter
