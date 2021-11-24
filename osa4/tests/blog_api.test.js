@@ -30,12 +30,7 @@ const initialBlogs = [
 ]
 beforeEach(async () => {
   await Blog.deleteMany({})
-  let blogObject = new Blog(initialBlogs[0])
-  await blogObject.save()
-  blogObject = new Blog(initialBlogs[1])
-  await blogObject.save()
-  blogObject = new Blog(initialBlogs[2])
-  await blogObject.save()
+  await Blog.insertMany(initialBlogs)
 })
 
 test('there are 3 blogs', async () => {
@@ -43,12 +38,28 @@ test('there are 3 blogs', async () => {
   expect(response.body).toHaveLength(3)
 })
 
-// test('blogs are returned as json', async () => {
-//   await api
-//     .get('/api/blogs')
-//     .expect(200)
-//     .expect('Content-Type', /application\/json/)
-// })
+const newBlog = {
+  title: 'Test blog 4',
+  author: 'Test Author 4',
+  url: 'http://testurl',
+  likes: 0
+}
+
+test('add 1 blog', async() => {
+  await api
+  .post('/api/blogs')
+  .send(newBlog)
+  .expect(201)
+  .expect('Content-Type', /application\/json/)
+
+  const response = await api.get('/api/blogs')
+  expect(response.body).toHaveLength(initialBlogs.length + 1)
+
+  const contents = response.body.map(r => r.title)
+   expect(contents).toContain(
+    'Test blog 4'
+  )
+})
 
 afterAll(() => {
   mongoose.connection.close()
