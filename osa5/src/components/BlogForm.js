@@ -19,7 +19,7 @@ const BlogForm = ({ handleSubmit }) => {
 
   const create = (event) => {
     event.preventDefault()
-  
+
     handleSubmit({
       title: newTitle,
       author: newAuthor,

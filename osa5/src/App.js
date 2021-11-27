@@ -79,25 +79,25 @@ const App = () => {
 
   return (
     <div>
-      {user === null ? 
-      <Login 
-        username={username}
-        password={password}
-        handleUsername={handleUsername}
-        handlePassword={handlePassword}
-        handleLogin={handleLogin}
-      /> : 
-      <div>
-        <h2>blogs</h2>
-        <p>{user.username} logged in
-          <button onClick={handleLogout}>logout</button>
-        </p>
+      {user === null ?
+        <Login
+          username={username}
+          password={password}
+          handleUsername={handleUsername}
+          handlePassword={handlePassword}
+          handleLogin={handleLogin}
+        /> :
+        <div>
+          <h2>blogs</h2>
+          <p>{user.username} logged in
+            <button onClick={handleLogout}>logout</button>
+          </p>
 
-        <Togglable buttonLabel='create new blog' ref={blogFormRef}>
-          <BlogForm handleSubmit={createBlog} />
-        </Togglable>
-        <BlogList blogs={blogs} />
-      </div>}
+          <Togglable buttonLabel='create new blog' ref={blogFormRef}>
+            <BlogForm handleSubmit={createBlog} />
+          </Togglable>
+          <BlogList blogs={blogs} />
+        </div>}
     </div>
   )
 }
