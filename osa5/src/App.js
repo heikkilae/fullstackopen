@@ -65,6 +65,7 @@ const App = () => {
   const handleLogout = () => {
     window.localStorage.clear()
     // Another way: window.localStorage.removeItem('loggedNoteappUser')
+    setUser(null)
   }
 
   const handleNewTitle = (event) => {
