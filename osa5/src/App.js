@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef  } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import BlogForm from './components/BlogForm'
 import BlogList from './components/BlogList'
 import Togglable from './components/Togglable'
@@ -77,6 +77,16 @@ const App = () => {
     }
   }
 
+  const updateBlog = async blog => {
+    try {
+      const updatedBlog = await blogService.update(blog._id, blog)
+      const newBlogs = blogs.map(o => o._id === updatedBlog._id ? updatedBlog : o)
+      setBlogs(newBlogs)
+    } catch (exception) {
+      console.log('cannot update blog:', exception)
+    }
+  }
+
   return (
     <div>
       {user === null ?
@@ -96,7 +106,7 @@ const App = () => {
           <Togglable buttonLabel='create new blog' ref={blogFormRef}>
             <BlogForm handleSubmit={createBlog} />
           </Togglable>
-          <BlogList blogs={blogs} />
+          <BlogList blogs={blogs} updateBlog={updateBlog} />
         </div>}
     </div>
   )
