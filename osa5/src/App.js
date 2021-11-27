@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import BlogForm from './components/BlogForm'
 import BlogList from './components/BlogList'
 import Login from './components/Login'
 import blogService from './services/blogs'
@@ -9,6 +10,10 @@ const App = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
+
+  const [newTitle, setNewTitle] = useState('')
+  const [newAuthor, setNewAuthor] = useState('')
+  const [newUrl, setNewUrl] = useState('')
 
   // Effect hook to request blogs when render App
   useEffect(() => {
@@ -23,7 +28,7 @@ const App = () => {
     if (loggedUserJson) {
       const user = JSON.parse(loggedUserJson)
       setUser(user)
-      // TODO: noteService.setToken(user.token)
+      blogService.setToken(user.token)
     }
   }, [])
 
@@ -48,6 +53,7 @@ const App = () => {
         'loggedBlogappUser', JSON.stringify(user)
       )
 
+      blogService.setToken(user.token)
       setUser(user)
       setUsername('')
       setPassword('')
@@ -61,6 +67,38 @@ const App = () => {
     // Another way: window.localStorage.removeItem('loggedNoteappUser')
   }
 
+  const handleNewTitle = (event) => {
+    setNewTitle(event.target.value)
+  }
+
+  const handleNewAuthor = (event) => {
+    setNewAuthor(event.target.value)
+  }
+
+  const handleNewUrl = (event) => {
+    setNewUrl(event.target.value)
+  }
+
+  const handleSubmit = async (event) => {
+    event.preventDefault()
+
+    const newBlog = {
+      title: newTitle,
+      author: newAuthor,
+      url: newUrl
+    }
+
+    try {
+      const createdBlog = await blogService.create(newBlog)
+      setBlogs(blogs.concat(createdBlog))
+      setNewTitle('')
+      setNewAuthor('')
+      setNewUrl('')
+    } catch (exception) {
+      console.log('cannot create blog:', exception)
+    }
+  }
+
   return (
     <div>
       {user === null ? 
@@ -70,8 +108,19 @@ const App = () => {
         handleUsername={handleUsername}
         handlePassword={handlePassword}
         handleLogin={handleLogin}
-         /> : 
-      <BlogList username={user.username} blogs={blogs} handleLogout={handleLogout} />}
+      /> : 
+      <div>
+        <BlogForm 
+          newTitle={newTitle} 
+          newAuthor={newAuthor}
+          newUrl={newUrl}
+          handleNewTitle={handleNewTitle}
+          handleNewAuthor={handleNewAuthor}
+          handleNewUrl={handleNewUrl}
+          handleSubmit={handleSubmit}
+        />
+        <BlogList username={user.username} blogs={blogs} handleLogout={handleLogout} />
+      </div>}
     </div>
   )
 }

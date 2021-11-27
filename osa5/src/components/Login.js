@@ -1,6 +1,6 @@
 import React from 'react'
 
-const Login = ({username, password, handleUsername, handlePassword, handleLogin}) => {
+const Login = ({ username, password, handleUsername, handlePassword, handleLogin }) => {
   return (
     <div>
     <h2>log in to application</h2>

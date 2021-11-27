@@ -1,7 +1,7 @@
 import React from 'react'
 import Blog from './Blog'
 
-const BlogList = ({username, blogs, handleLogout}) => (
+const BlogList = ({ username, blogs, handleLogout }) => (
     <div>
       <h2>blogs</h2>
       <p>{username} logged in
