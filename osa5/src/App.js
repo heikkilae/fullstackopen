@@ -10,10 +10,21 @@ const App = () => {
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
 
+  // Effect hook to request blogs when render App
   useEffect(() => {
     blogService.getAll().then(blogs =>
       setBlogs( blogs )
-    )  
+    )
+  }, [])
+
+  // Effect hook to check if user already logged in
+  useEffect(() => {
+    const loggedUserJson = window.localStorage.getItem('loggedBlogappUser')
+    if (loggedUserJson) {
+      const user = JSON.parse(loggedUserJson)
+      setUser(user)
+      // TODO: noteService.setToken(user.token)
+    }
   }, [])
 
   const handleUsername = (event) => {
@@ -31,12 +42,23 @@ const App = () => {
       const user = await loginService.login({
         username, password,
       })
+
+      // Store user into local store (try window.localStorage command in console)
+      window.localStorage.setItem(
+        'loggedBlogappUser', JSON.stringify(user)
+      )
+
       setUser(user)
       setUsername('')
       setPassword('')
     } catch (exception) {
       console.log('wrong credentials')
     }
+  }
+
+  const handleLogout = () => {
+    window.localStorage.clear()
+    // Another way: window.localStorage.removeItem('loggedNoteappUser')
   }
 
   return (
@@ -47,8 +69,9 @@ const App = () => {
         password={password}
         handleUsername={handleUsername}
         handlePassword={handlePassword}
-        handleLogin={handleLogin} /> : 
-      <BlogList username={user.username} blogs={blogs} />}
+        handleLogin={handleLogin}
+         /> : 
+      <BlogList username={user.username} blogs={blogs} handleLogout={handleLogout} />}
     </div>
   )
 }
