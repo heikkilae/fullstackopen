@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef  } from 'react'
 import BlogForm from './components/BlogForm'
 import BlogList from './components/BlogList'
+import Togglable from './components/Togglable'
 import Login from './components/Login'
 import blogService from './services/blogs'
 import loginService from './services/login'
@@ -10,10 +11,6 @@ const App = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
-
-  const [newTitle, setNewTitle] = useState('')
-  const [newAuthor, setNewAuthor] = useState('')
-  const [newUrl, setNewUrl] = useState('')
 
   // Effect hook to request blogs when render App
   useEffect(() => {
@@ -64,37 +61,17 @@ const App = () => {
 
   const handleLogout = () => {
     window.localStorage.clear()
-    // Another way: window.localStorage.removeItem('loggedNoteappUser')
+    // Another way: window.localStorage.removeItem('loggedBlogappUser')
     setUser(null)
   }
 
-  const handleNewTitle = (event) => {
-    setNewTitle(event.target.value)
-  }
+  const blogFormRef = useRef()
 
-  const handleNewAuthor = (event) => {
-    setNewAuthor(event.target.value)
-  }
-
-  const handleNewUrl = (event) => {
-    setNewUrl(event.target.value)
-  }
-
-  const handleSubmit = async (event) => {
-    event.preventDefault()
-
-    const newBlog = {
-      title: newTitle,
-      author: newAuthor,
-      url: newUrl
-    }
-
+  const createBlog = async (newBlog) => {
     try {
       const createdBlog = await blogService.create(newBlog)
       setBlogs(blogs.concat(createdBlog))
-      setNewTitle('')
-      setNewAuthor('')
-      setNewUrl('')
+      blogFormRef.current.toggleVisibility()
     } catch (exception) {
       console.log('cannot create blog:', exception)
     }
@@ -111,16 +88,15 @@ const App = () => {
         handleLogin={handleLogin}
       /> : 
       <div>
-        <BlogForm 
-          newTitle={newTitle} 
-          newAuthor={newAuthor}
-          newUrl={newUrl}
-          handleNewTitle={handleNewTitle}
-          handleNewAuthor={handleNewAuthor}
-          handleNewUrl={handleNewUrl}
-          handleSubmit={handleSubmit}
-        />
-        <BlogList username={user.username} blogs={blogs} handleLogout={handleLogout} />
+        <h2>blogs</h2>
+        <p>{user.username} logged in
+          <button onClick={handleLogout}>logout</button>
+        </p>
+
+        <Togglable buttonLabel='create new blog' ref={blogFormRef}>
+          <BlogForm handleSubmit={createBlog} />
+        </Togglable>
+        <BlogList blogs={blogs} />
       </div>}
     </div>
   )

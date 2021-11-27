@@ -1,25 +1,56 @@
-import React from 'react'
+import React, { useState } from 'react'
 
-const BlogForm = ({ newTitle, newAuthor, newUrl, handleNewTitle, 
-  handleNewAuthor, handleNewUrl, handleSubmit }) => (
-  <div>
-    <h2>create new</h2>
-    <form>
-      <div>
-        title: <input value={newTitle} onChange={handleNewTitle} />
-      </div>
-      <div>
-        author: <input value={newAuthor} onChange={handleNewAuthor} />
-      </div>
-      <div>
-        url: <input value={newUrl} onChange={handleNewUrl} />
-      </div>
-      <div>
-        <button type="submit" onClick={handleSubmit}>create</button>
-      </div>
-    </form>
-  </div>
-)
+const BlogForm = ({ handleSubmit }) => {
+  const [newTitle, setNewTitle] = useState('')
+  const [newAuthor, setNewAuthor] = useState('')
+  const [newUrl, setNewUrl] = useState('')
+
+  const handleNewTitle = (event) => {
+    setNewTitle(event.target.value)
+  }
+
+  const handleNewAuthor = (event) => {
+    setNewAuthor(event.target.value)
+  }
+
+  const handleNewUrl = (event) => {
+    setNewUrl(event.target.value)
+  }
+
+  const create = (event) => {
+    event.preventDefault()
+  
+    handleSubmit({
+      title: newTitle,
+      author: newAuthor,
+      url: newUrl
+    })
+
+    setNewTitle('')
+    setNewAuthor('')
+    setNewUrl('')
+  }
+
+  return (
+    <div>
+      <h2>create new</h2>
+      <form>
+        <div>
+          title: <input value={newTitle} onChange={handleNewTitle} />
+        </div>
+        <div>
+          author: <input value={newAuthor} onChange={handleNewAuthor} />
+        </div>
+        <div>
+          url: <input value={newUrl} onChange={handleNewUrl} />
+        </div>
+        <div>
+          <button type="submit" onClick={create}>create</button>
+        </div>
+      </form>
+    </div>
+  )
+}
 
 export default BlogForm
 
