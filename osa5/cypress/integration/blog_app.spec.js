@@ -37,10 +37,10 @@ describe('Blog app', function() {
 
 describe('When logged in', function() {
   beforeEach(function() {
-    cy.request('POST', 'http://localhost:3003/api/testing/reset')
-    cy.request('POST', 'http://localhost:3003/api/users/', testUser)
     cy.visit('http://localhost:3000')
-    login('tTestaaja', 'salainen')
+
+    // Bypass original login
+    cy.bypassLogin({ username: 'tTestaaja', password: 'salainen' })
   })
 
   it('A blog can be created', function() {
@@ -50,5 +50,13 @@ describe('When logged in', function() {
     cy.get('#url').type('http://localhost')
     cy.get('#create-button').click()
     cy.contains('The very first blog post')
+  })
+
+  describe('blog exists', function () {
+    it('A blog can be liked', function() {
+      cy.contains('view').click()
+      cy.contains('like').click()
+      cy.contains('likes: 1')
+    })
   })
 })
