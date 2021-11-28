@@ -65,4 +65,26 @@ describe('When logged in', function() {
       cy.contains('The very first blog post').should('not.exist')
     })
   })
+
+  describe('Multiple blogs', function () {
+    it('Blogs can be sorted by likes', function() {
+      cy.contains('create new blog').click()
+      cy.get('#title').type('The very first blog post')
+      cy.get('#author').type('Teppo Testaaja')
+      cy.get('#url').type('http://localhost')
+      cy.get('#create-button').click().wait(500)
+
+      cy.contains('create new blog').click()
+      cy.get('#title').type('The second blog post')
+      cy.get('#author').type('Teppo Testaaja')
+      cy.get('#url').type('http://localhost')
+      cy.get('#create-button').click().wait(500)
+      cy.contains('view').click()
+      cy.contains('like').click()
+      cy.contains('like').click()
+
+      // Check the top most element is most liked with two like clicks
+      cy.get('#blog-item').contains('The second blog post')
+    })
+  })
 })
