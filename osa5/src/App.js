@@ -97,6 +97,8 @@ const App = () => {
     }
   }
 
+  blogs.sort((a, b) => (a.likes < b.likes) ? 1 : -1)
+
   return (
     <div>
       {user === null ?
