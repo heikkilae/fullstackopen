@@ -87,6 +87,16 @@ const App = () => {
     }
   }
 
+  const removeBlog = async id => {
+    try {
+      await blogService.remove(id)
+      const newBlogs = blogs.filter(o => o._id !== id)
+      setBlogs(newBlogs)
+    } catch (exception) {
+      console.log('cannot remove blog:', exception)
+    }
+  }
+
   return (
     <div>
       {user === null ?
@@ -106,7 +116,7 @@ const App = () => {
           <Togglable buttonLabel='create new blog' ref={blogFormRef}>
             <BlogForm handleSubmit={createBlog} />
           </Togglable>
-          <BlogList blogs={blogs} updateBlog={updateBlog} />
+          <BlogList blogs={blogs} updateBlog={updateBlog} removeBlog={removeBlog} />
         </div>}
     </div>
   )

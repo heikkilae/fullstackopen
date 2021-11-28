@@ -58,5 +58,11 @@ describe('When logged in', function() {
       cy.contains('like').click()
       cy.contains('likes: 1')
     })
+
+    it('A blog can be deleted', function() {
+      cy.contains('view').click()
+      cy.contains('remove').click()
+      cy.contains('The very first blog post').should('not.exist')
+    })
   })
 })

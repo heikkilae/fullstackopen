@@ -31,12 +31,12 @@ blogsRouter.post('/', async (request, response) => {
     likes: body.likes ? body.likes : 0,
     user: user
   })
-
-  const savedBlog = await blog.save()
   
+  const savedBlog = await blog.save()
+
   // Also update blogs into user
-  user.blogs = user.blogs.concat(savedBlog._id)
-  await user.save()
+  const blogs = user.blogs.concat(savedBlog._id)
+  await User.findByIdAndUpdate(user.id, { blogs: blogs })
 
   response.status(201).json(blog)
 })
@@ -56,7 +56,21 @@ blogsRouter.put('/:id', async (request, response) => {
 })
 
 blogsRouter.delete('/:id', async (request, response) => {
-  await Blog.findByIdAndRemove(request.params.id)
+  const token = getTokenFrom(request)
+  const decodedToken = jwt.verify(token, process.env.SECRET)
+  if (!token || !decodedToken.id) {
+    return response.status(401).json({ error: 'token missing or invalid' })
+  }
+
+  const blog = await Blog.findById(request.params.id)
+  const userId = blog.user.toString()
+
+  if (userId !== decodedToken.id) {
+    response.status(401).json({ error: 'user not allowed to remove blog' })
+  }
+
+  blog.remove()
+
   response.status(204).end()
 })
 
