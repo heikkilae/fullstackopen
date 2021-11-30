@@ -1,7 +1,5 @@
 import andicdoteService from '../services/anecdotes'
 
-const getId = () => (100000 * Math.random()).toFixed(0)
-
 const reducer = (state = [], action) => {
   console.log('state now: ', state)
   console.log('action', action)
@@ -10,13 +8,7 @@ const reducer = (state = [], action) => {
     case 'INIT_ANECDOTES':
       return action.data
     case 'VOTE':
-      const id = action.id
-      const anecdoteToChange = state.find(n => n.id === id)
-      const changedAnecdote = { 
-        content: anecdoteToChange.content, 
-        votes: anecdoteToChange.votes + 1
-      }
-      return state.map(a => a === anecdoteToChange ? changedAnecdote : a)
+      return state.map(a => a.id === action.content.id ? action.content : a)
     case 'ADD':
       return [...state, action.content]
     default: 
@@ -35,9 +27,21 @@ export const initializeAnecdotes = (anecdotes) => {
 }
 
 export const voteAnecdote = id => {
-  return {
-    type: "VOTE",
-    id: id
+  return async dispatch => {
+    const anecdotes = await andicdoteService.getAll()
+    const anecdoteToChange = anecdotes.find(n => n.id === id)
+    const changedAnecdote = { 
+      id: anecdoteToChange.id,
+      content: anecdoteToChange.content, 
+      votes: anecdoteToChange.votes + 1
+    }
+
+    const updatedAnecdote = await andicdoteService.update(changedAnecdote)
+
+    dispatch({
+      type: "VOTE",
+      content: updatedAnecdote
+    })
   }
 }
 
