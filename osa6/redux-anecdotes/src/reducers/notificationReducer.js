@@ -1,9 +1,16 @@
-const notificationReducer = (state = 'initial message', action) => {
+const notificationReducer = (state = '', action) => {
   switch(action.type) {
-    case 'ADD_NOTIFICATION':
-      return action.message
+    case 'SET_NOTIFICATION':
+      return action.content
       default:
         return state
+  }
+}
+
+export const setNotification = notification => {
+  return {
+    type: "SET_NOTIFICATION",
+    content: notification
   }
 }
 
