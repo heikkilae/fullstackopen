@@ -1,3 +1,5 @@
+let previousTimeout = null
+
 const notificationReducer = (state = {content: '', duration: 0}, action) => {
   switch(action.type) {
     case 'SET_NOTIFICATION':
@@ -8,10 +10,24 @@ const notificationReducer = (state = {content: '', duration: 0}, action) => {
 }
 
 export const setNotification = (notification, duration) => {
-  return {
-    type: "SET_NOTIFICATION",
-    content: notification,
-    duration: duration
+  return async dispatch => {
+    dispatch({
+      type: "SET_NOTIFICATION",
+      content: notification,
+      duration: duration
+    })
+
+    if (previousTimeout !== null) {
+      clearTimeout(previousTimeout)
+    }
+
+    previousTimeout = setTimeout(() => {
+      dispatch({
+        type: "SET_NOTIFICATION",
+        content: '',
+        duration: 0
+      })
+    }, duration)
   }
 }
 
