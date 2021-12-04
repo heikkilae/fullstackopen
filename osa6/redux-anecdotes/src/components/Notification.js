@@ -1,25 +1,23 @@
 
 import React, {useEffect} from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { connect } from 'react-redux'
 import { clearNotification } from '../reducers/notificationReducer'
 
-const Notification = () => {
-  const content = useSelector(state => state.notification.content)
-  const duration = useSelector(state => state.notification.duration)
+const Notification = (props) => {
   
+const { content, duration } = props
+
   const style = {
     border: 'solid',
     padding: 10,
     borderWidth: 1
   }
 
-  const dispatch = useDispatch()
-
   useEffect(() => {
     setTimeout(() => {
-      dispatch(clearNotification())
+      props.clearNotification()
     }, duration)
-  }, [dispatch, duration])
+  }, [props, duration])
 
   return (
     <div style={style}>
@@ -28,4 +26,14 @@ const Notification = () => {
   )
 }
 
-export default Notification
+const mapStateToProps = (state) => {
+  return {
+    content: state.notification.content,
+    duration: state.notification.duration,
+  }
+}
+
+export default connect(
+  mapStateToProps,
+  { clearNotification }
+)(Notification)
