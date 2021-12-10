@@ -5,19 +5,21 @@ import Togglable from './components/Togglable'
 import Login from './components/Login'
 import blogService from './services/blogs'
 import loginService from './services/login'
+import { useDispatch, useSelector } from 'react-redux'
+import { initializeBlogs, addBlog } from './reducers/blogsReducer'
 
 const App = () => {
-  const [blogs, setBlogs] = useState([])
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
 
+  const blogs = useSelector(state => state)
+  const dispatch = useDispatch()
+
   // Effect hook to request blogs when render App
   useEffect(() => {
-    blogService.getAll().then(blogs =>
-      setBlogs( blogs )
-    )
-  }, [])
+    dispatch(initializeBlogs())
+  }, [dispatch])
 
   // Effect hook to check if user already logged in
   useEffect(() => {
@@ -67,34 +69,29 @@ const App = () => {
 
   const blogFormRef = useRef()
 
-  const createBlog = async (newBlog) => {
-    try {
-      const createdBlog = await blogService.create(newBlog)
-      setBlogs(blogs.concat(createdBlog))
-      blogFormRef.current.toggleVisibility()
-    } catch (exception) {
-      console.log('cannot create blog:', exception)
-    }
+  const createBlog = (newBlog) => {
+    dispatch(addBlog(newBlog))
+    blogFormRef.current.toggleVisibility()
   }
 
   const updateBlog = async blog => {
-    try {
-      const updatedBlog = await blogService.update(blog._id, blog)
-      const newBlogs = blogs.map(o => o._id === updatedBlog._id ? updatedBlog : o)
-      setBlogs(newBlogs)
-    } catch (exception) {
-      console.log('cannot update blog:', exception)
-    }
+    // try {
+    //   const updatedBlog = await blogService.update(blog._id, blog)
+    //   const newBlogs = blogs.map(o => o._id === updatedBlog._id ? updatedBlog : o)
+    //   setBlogs(newBlogs)
+    // } catch (exception) {
+    //   console.log('cannot update blog:', exception)
+    // }
   }
 
   const removeBlog = async id => {
-    try {
-      await blogService.remove(id)
-      const newBlogs = blogs.filter(o => o._id !== id)
-      setBlogs(newBlogs)
-    } catch (exception) {
-      console.log('cannot remove blog:', exception)
-    }
+    // try {
+    //   await blogService.remove(id)
+    //   const newBlogs = blogs.filter(o => o._id !== id)
+    //   setBlogs(newBlogs)
+    // } catch (exception) {
+    //   console.log('cannot remove blog:', exception)
+    // }
   }
 
   blogs.sort((a, b) => (a.likes < b.likes) ? 1 : -1)
