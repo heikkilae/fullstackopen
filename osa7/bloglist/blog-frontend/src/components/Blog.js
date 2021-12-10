@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react'
 
-const Blog = ({ blog, updateBlog, remove }) => {
+const Blog = ({ blog, likeClicked, remove }) => {
 
   const [visible, setVisible] = useState(false)
 
@@ -10,8 +10,7 @@ const Blog = ({ blog, updateBlog, remove }) => {
   }
 
   const handleLikePress = () => {
-    const newBlog = { ...blog, likes: blog.likes + 1 }
-    updateBlog(newBlog)
+    likeClicked(blog._id)
   }
 
   const handleRemovePress = () => {

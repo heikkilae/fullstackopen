@@ -6,7 +6,7 @@ import Login from './components/Login'
 import blogService from './services/blogs'
 import loginService from './services/login'
 import { useDispatch, useSelector } from 'react-redux'
-import { initializeBlogs, addBlog } from './reducers/blogsReducer'
+import { initializeBlogs, addBlog, updateBlog, removeBlog } from './reducers/blogsReducer'
 
 const App = () => {
   const [username, setUsername] = useState('')
@@ -74,24 +74,14 @@ const App = () => {
     blogFormRef.current.toggleVisibility()
   }
 
-  const updateBlog = async blog => {
-    // try {
-    //   const updatedBlog = await blogService.update(blog._id, blog)
-    //   const newBlogs = blogs.map(o => o._id === updatedBlog._id ? updatedBlog : o)
-    //   setBlogs(newBlogs)
-    // } catch (exception) {
-    //   console.log('cannot update blog:', exception)
-    // }
+  const blogLiked = async id => {
+    const blog = blogs.find(b => b._id === id)
+    const newBlog = { ...blog, likes: blog.likes + 1 }
+    dispatch(updateBlog(newBlog))
   }
 
-  const removeBlog = async id => {
-    // try {
-    //   await blogService.remove(id)
-    //   const newBlogs = blogs.filter(o => o._id !== id)
-    //   setBlogs(newBlogs)
-    // } catch (exception) {
-    //   console.log('cannot remove blog:', exception)
-    // }
+  const requestRemoveBlog = async id => {
+    dispatch(removeBlog(id))
   }
 
   blogs.sort((a, b) => (a.likes < b.likes) ? 1 : -1)
@@ -115,7 +105,7 @@ const App = () => {
           <Togglable buttonLabel='create new blog' ref={blogFormRef}>
             <BlogForm handleSubmit={createBlog} />
           </Togglable>
-          <BlogList blogs={blogs} updateBlog={updateBlog} removeBlog={removeBlog} />
+          <BlogList blogs={blogs} onBlogLiked={blogLiked} onRemoveBlog={requestRemoveBlog} />
         </div>}
     </div>
   )
