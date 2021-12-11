@@ -26,18 +26,20 @@ const Blog = ({ blog, likeClicked, remove, expanded = false }) => {
     paddingTop: 10,
     paddingLeft: 2,
     border: 'solid',
-    borderWidth: 1,
+    borderWidth: expanded ? 0 : 1,
     marginBottom: 5
   }
 
   return (
     <div style={blogStyle}>
-      <Link to={`/blogs/${blog._id}`} >{blog.title} {blog.author} </Link>
+      {expanded
+        ? <h2>{blog.title}</h2>
+        : <Link to={`/blogs/${blog._id}`} >{blog.title} {blog.author} </Link>}
       <div style={showWhenExpandedStyle}>
-        {blog.url} <br />
+        <Link to={blog.url} >{blog.url}</Link> <br />
         likes: {likes} <button onClick={handleLikePress}>like</button> <br />
-        {blog.username}
         <button onClick={handleRemovePress}>remove</button>
+        {expanded ? <p><em>added by {blog.author}</em></p> : null}
       </div>
     </div>
   )}
