@@ -1,27 +1,26 @@
-import React, { useState, useEffect, useRef } from 'react'
-import BlogForm from './components/BlogForm'
-import BlogList from './components/BlogList'
-import Togglable from './components/Togglable'
-import Login from './components/Login'
+import React, { useState, useEffect } from 'react'
+
+import {
+  BrowserRouter as Router,
+  Switch, Route
+} from 'react-router-dom'
+
 import blogService from './services/blogs'
 import loginService from './services/login'
 import { useDispatch, useSelector } from 'react-redux'
-import { initializeBlogs, addBlog, updateBlog, removeBlog } from './reducers/blogsReducer'
 import { setUser } from './reducers/userReducer'
+
+import Login from './components/Login'
+
+import Users from './Users'
+import Blogs from './Blogs'
 
 const App = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  // const [user, setUser] = useState(null)
 
   const user = useSelector(state => state.user)
-  const blogs = useSelector(state => state.blogs)
   const dispatch = useDispatch()
-
-  // Effect hook to request blogs when render App
-  useEffect(() => {
-    dispatch(initializeBlogs())
-  }, [dispatch])
 
   // Effect hook to check if user already logged in
   useEffect(() => {
@@ -69,47 +68,33 @@ const App = () => {
     dispatch(setUser(null))
   }
 
-  const blogFormRef = useRef()
-
-  const createBlog = (newBlog) => {
-    dispatch(addBlog(newBlog))
-    blogFormRef.current.toggleVisibility()
-  }
-
-  const blogLiked = async id => {
-    const blog = blogs.find(b => b._id === id)
-    const newBlog = { ...blog, likes: blog.likes + 1 }
-    dispatch(updateBlog(newBlog))
-  }
-
-  const requestRemoveBlog = async id => {
-    dispatch(removeBlog(id))
-  }
-
-  blogs.sort((a, b) => (a.likes < b.likes) ? 1 : -1)
-
   return (
-    <div>
-      {user === null ?
-        <Login
-          username={username}
-          password={password}
-          handleUsername={handleUsername}
-          handlePassword={handlePassword}
-          handleLogin={handleLogin}
-        /> :
-        <div>
-          <h2>blogs</h2>
-          <p>{user.username} logged in
-            <button onClick={handleLogout}>logout</button>
-          </p>
-
-          <Togglable buttonLabel='create new blog' ref={blogFormRef}>
-            <BlogForm handleSubmit={createBlog} />
-          </Togglable>
-          <BlogList blogs={blogs} onBlogLiked={blogLiked} onRemoveBlog={requestRemoveBlog} />
-        </div>}
-    </div>
+    <Router>
+      <div>
+        {user === null ?
+          <Login
+            username={username}
+            password={password}
+            handleUsername={handleUsername}
+            handlePassword={handlePassword}
+            handleLogin={handleLogin}
+          /> :
+          <div>
+            <h2>blogs</h2>
+            <p>{user.username} logged in
+              <button onClick={handleLogout}>logout</button>
+            </p>
+            <Switch>
+              <Route path="/users">
+                <Users />
+              </Route>
+              <Route path="/">
+                <Blogs />
+              </Route>
+            </Switch>
+          </div>}
+      </div>
+    </Router>
   )
 }
 
