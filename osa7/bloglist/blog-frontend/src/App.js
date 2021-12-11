@@ -85,6 +85,9 @@ const App = () => {
               <button onClick={handleLogout}>logout</button>
             </p>
             <Switch>
+              <Route path="/users/:id">
+                <Users />
+              </Route>
               <Route path="/users">
                 <Users />
               </Route>

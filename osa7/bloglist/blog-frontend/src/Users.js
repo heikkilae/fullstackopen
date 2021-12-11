@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import userService from './services/users'
+import { useParams } from 'react-router-dom'
 
+import UsersList from './components/users/UsersList'
+import User from './components/users/User'
 
 const Users = () => {
   const [users, setUsers] = useState([])
@@ -11,27 +14,17 @@ const Users = () => {
     )
   }, [])
 
+  const id = useParams().id
+
+  if (id) {
+    const user = users.find(u => u.id === id)
+    return (
+      <User user={user} />
+    )
+  }
+
   return (
-    <div>
-      <h2>Users</h2>
-      {users && users.length > 0 ?
-        <table>
-          <thead>
-            <tr>
-              <th></th>
-              <th>blogs created</th>
-            </tr>
-          </thead>
-          <tbody>
-            {users.map(user =>
-              <tr key={user.id}>
-                <td>{user.name}</td>
-                <td>{user.blogs.length}</td>
-              </tr>)}
-          </tbody>
-        </table>
-        : null}
-    </div>
+    <UsersList users={users} />
   )
 }
 
