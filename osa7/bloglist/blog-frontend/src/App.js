@@ -7,13 +7,15 @@ import blogService from './services/blogs'
 import loginService from './services/login'
 import { useDispatch, useSelector } from 'react-redux'
 import { initializeBlogs, addBlog, updateBlog, removeBlog } from './reducers/blogsReducer'
+import { setUser } from './reducers/userReducer'
 
 const App = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const [user, setUser] = useState(null)
+  // const [user, setUser] = useState(null)
 
-  const blogs = useSelector(state => state)
+  const user = useSelector(state => state.user)
+  const blogs = useSelector(state => state.blogs)
   const dispatch = useDispatch()
 
   // Effect hook to request blogs when render App
@@ -26,10 +28,10 @@ const App = () => {
     const loggedUserJson = window.localStorage.getItem('loggedBlogappUser')
     if (loggedUserJson) {
       const user = JSON.parse(loggedUserJson)
-      setUser(user)
+      dispatch(setUser(user))
       blogService.setToken(user.token)
     }
-  }, [])
+  }, [dispatch])
 
   const handleUsername = (event) => {
     setUsername(event.target.value)
@@ -53,7 +55,7 @@ const App = () => {
       )
 
       blogService.setToken(user.token)
-      setUser(user)
+      dispatch(setUser(user))
       setUsername('')
       setPassword('')
     } catch (exception) {
@@ -64,7 +66,7 @@ const App = () => {
   const handleLogout = () => {
     window.localStorage.clear()
     // Another way: window.localStorage.removeItem('loggedBlogappUser')
-    setUser(null)
+    dispatch(setUser(null))
   }
 
   const blogFormRef = useRef()
