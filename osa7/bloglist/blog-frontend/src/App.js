@@ -91,6 +91,9 @@ const App = () => {
               <Route path="/users">
                 <Users />
               </Route>
+              <Route path="/blogs/:id">
+                <Blogs />
+              </Route>
               <Route path="/">
                 <Blogs />
               </Route>

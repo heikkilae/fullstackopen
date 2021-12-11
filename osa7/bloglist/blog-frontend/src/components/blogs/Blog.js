@@ -1,12 +1,11 @@
 
-import React, { useState } from 'react'
+import React from 'react'
+import { Link } from 'react-router-dom'
 
-const Blog = ({ blog, likeClicked, remove }) => {
+const Blog = ({ blog, likeClicked, remove, expanded = false }) => {
 
-  const [visible, setVisible] = useState(false)
-
-  const toggleVisibility = () => {
-    setVisible(!visible)
+  if (!blog) {
+    return null
   }
 
   const handleLikePress = () => {
@@ -17,11 +16,10 @@ const Blog = ({ blog, likeClicked, remove }) => {
     remove(blog._id)
   }
 
-  const buttonLabel = !visible ? 'view' : 'hide'
   const likes = blog.likes ? blog.likes : 0
 
-  const showWhenVisibleStyle = {
-    display: visible ? '' : 'none'
+  const showWhenExpandedStyle = {
+    display: expanded ? '' : 'none'
   }
 
   const blogStyle = {
@@ -34,8 +32,8 @@ const Blog = ({ blog, likeClicked, remove }) => {
 
   return (
     <div style={blogStyle}>
-      {blog.title} {blog.author} <button onClick={toggleVisibility}>{buttonLabel}</button>
-      <div style={showWhenVisibleStyle}>
+      <Link to={`/blogs/${blog._id}`} >{blog.title} {blog.author} </Link>
+      <div style={showWhenExpandedStyle}>
         {blog.url} <br />
         likes: {likes} <button onClick={handleLikePress}>like</button> <br />
         {blog.username}

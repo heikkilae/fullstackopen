@@ -1,10 +1,13 @@
 import React, { useRef, useEffect } from 'react'
-import Togglable from './components/Togglable'
-import BlogForm from './components/BlogForm'
-import BlogList from './components/BlogList'
 import { useDispatch, useSelector } from 'react-redux'
+import { useParams } from 'react-router-dom'
 
 import { initializeBlogs, addBlog, updateBlog, removeBlog } from './reducers/blogsReducer'
+
+import Togglable from './components/Togglable'
+import BlogForm from './components/blogs/BlogForm'
+import BlogList from './components/blogs/BlogList'
+import Blog from './components/blogs/Blog'
 
 const Blogs = () => {
   const blogs = useSelector(state => state.blogs)
@@ -25,6 +28,22 @@ const Blogs = () => {
     const blog = blogs.find(b => b._id === id)
     const newBlog = { ...blog, likes: blog.likes + 1 }
     dispatch(updateBlog(newBlog))
+  }
+
+  const id = useParams().id
+
+  if (id) {
+    const blog = blogs.find(blog => blog._id === id)
+    return (
+      <Blog
+        blog={blog}
+        likeClicked={blogLiked}
+        remove={(id) => {
+          dispatch(removeBlog(id))
+        }}
+        expanded={true}
+      />
+    )
   }
 
   // Sort blogs to show most liked on top
