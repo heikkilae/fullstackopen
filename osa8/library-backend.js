@@ -177,7 +177,7 @@ const resolvers = {
 
       authors = authors.map(a => {
         if (a.name === args.name) {
-          author = { ...args, born: args.born }
+          author = { ...args }
           return author
         } else {
           return a
