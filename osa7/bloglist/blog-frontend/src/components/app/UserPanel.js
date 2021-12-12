@@ -1,10 +1,11 @@
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { HStack, Text, Button } from '@chakra-ui/react'
 
 import { setUser } from '../../reducers/userReducer'
 import blogService from '../../services/blogs'
 
-const UserPanel = ({ style }) => {
+const UserPanel = () => {
   const user = useSelector(state => state.user)
   const dispatch = useDispatch()
 
@@ -27,9 +28,14 @@ const UserPanel = ({ style }) => {
   if (!user) return null
 
   return (
-    <div style={style}>
-      {user.username} logged in <button onClick={handleLogout}>logout</button>
-    </div>
+    <HStack>
+      <Text>{user.username} logged in</Text>
+      <Button
+        variant='outline'
+        onClick={handleLogout}>
+          logout
+      </Button>
+    </HStack>
   )
 }
 

@@ -5,7 +5,7 @@ import { useParams } from 'react-router-dom'
 import UsersList from './components/users/UsersList'
 import User from './components/users/User'
 
-const Users = () => {
+const Users = ({ basicPageBoxStyle }) => {
   const [users, setUsers] = useState([])
 
   useEffect(() => {
@@ -19,12 +19,12 @@ const Users = () => {
   if (id) {
     const user = users.find(u => u.id === id)
     return (
-      <User user={user} />
+      <User user={user} style={basicPageBoxStyle} />
     )
   }
 
   return (
-    <UsersList users={users} />
+    <UsersList users={users} style={basicPageBoxStyle} />
   )
 }
 

@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
 
+import { VStack, FormLabel, FormControl, Input, Heading, Button } from '@chakra-ui/react'
+
 import loginService from '../../services/login'
 import blogService from '../../services/blogs'
 import { setUser } from '../../reducers/userReducer'
@@ -43,32 +45,34 @@ const LoginForm = () => {
   }
 
   return (
-    <div>
-      <h2>log in to application</h2>
+    <VStack borderRadius='xl' p='20' spacing={3}>
+      <Heading as='h3' size='lg'>log in to application</Heading>
       <form onSubmit={handleLogin}>
-        <div>
-        username
-          <input
-            id='username'
-            type="text"
-            value={username}
-            name="Username"
-            onChange={handleUsername}
-          />
-        </div>
-        <div>
-        password
-          <input
-            id='password'
-            type="password"
-            value={password}
-            name="Password"
-            onChange={handlePassword}
-          />
-        </div>
-        <button id="login-button" type="submit">login</button>
+        <VStack alignItems='flex-start' p={3}>
+          <FormControl>
+            <FormLabel>username:</FormLabel>
+            <Input
+              id='username'
+              type="text"
+              value={username}
+              name="Username"
+              onChange={handleUsername}
+            />
+          </FormControl>
+          <FormControl>
+            <FormLabel>password:</FormLabel>
+            <Input
+              id='password'
+              type="password"
+              value={password}
+              name="Password"
+              onChange={handlePassword}
+            />
+          </FormControl>
+          <Button id="login-button" type="submit">login</Button>
+        </VStack>
       </form>
-    </div>
+    </VStack>
   )
 }
 

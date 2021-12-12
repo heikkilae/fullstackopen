@@ -1,12 +1,15 @@
 import React from 'react'
 import Blog from './Blog'
+import { List, ListItem } from '@chakra-ui/react'
 
 const BlogList = ({ blogs, onBlogLiked, onRemoveBlog }) => (
-  <div>
+  <List w='100%' spacing={3}>
     {blogs.map(blog =>
-      <Blog key={blog._id} blog={blog} likeClicked={onBlogLiked} remove={onRemoveBlog} />
+      <ListItem key={blog._id} bg='gray.50' borderRadius='xl' p='5'>
+        <Blog blog={blog} likeClicked={onBlogLiked} remove={onRemoveBlog} />
+      </ListItem>
     )}
-  </div>
+  </List>
 )
 
 export default BlogList

@@ -1,4 +1,12 @@
 import React, { useState } from 'react'
+import {
+  VStack,
+  Heading,
+  FormLabel,
+  Input,
+  Button,
+  FormControl
+} from '@chakra-ui/react'
 
 const BlogForm = ({ handleSubmit }) => {
   const [newTitle, setNewTitle] = useState('')
@@ -31,24 +39,31 @@ const BlogForm = ({ handleSubmit }) => {
     setNewUrl('')
   }
 
+  const inputStyle = {
+    bg: 'white'
+  }
+
   return (
-    <div>
-      <h2>create new</h2>
-      <form>
-        <div>
-          title: <input id='title' value={newTitle} onChange={handleNewTitle} />
-        </div>
-        <div>
-          author: <input id='author' value={newAuthor} onChange={handleNewAuthor} />
-        </div>
-        <div>
-          url: <input id='url' value={newUrl} onChange={handleNewUrl} />
-        </div>
-        <div>
-          <button id='create-button' type="submit" onClick={create}>create</button>
-        </div>
-      </form>
-    </div>
+    <VStack alignItems='flex-start'  bg='gray.50' borderRadius='xl' p='5' spacing={3}>
+      <Heading as='h3' size='lg'>create new</Heading>
+      <VStack w='xs' maxW='full' spacing={3}>
+        <FormControl>
+          <FormLabel>title:</FormLabel>
+          <Input id='title'value={newTitle} onChange={handleNewTitle} {...inputStyle} />
+        </FormControl>
+        <FormControl>
+          <FormLabel>author:</FormLabel>
+          <Input id='author' value={newAuthor} onChange={handleNewAuthor} {...inputStyle}/>
+        </FormControl>
+        <FormControl>
+          <FormLabel>url:</FormLabel>
+          <Input id='url' value={newUrl} onChange={handleNewUrl} {...inputStyle}/>
+        </FormControl>
+        <FormControl>
+          <Button id='create-button' w='xs' type="submit" variant='outline' onClick={create}>create</Button>
+        </FormControl>
+      </VStack>
+    </VStack>
   )
 }
 

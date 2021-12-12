@@ -1,8 +1,9 @@
 
 import React from 'react'
 import { Link } from 'react-router-dom'
+import { Heading, VStack, Button, Text, HStack, Box, Link as CLink } from '@chakra-ui/react'
 
-const Blog = ({ blog, likeClicked, remove, expanded = false }) => {
+const Blog = ({ blog, style, likeClicked, remove, expanded = false }) => {
 
   if (!blog) {
     return null
@@ -18,30 +19,30 @@ const Blog = ({ blog, likeClicked, remove, expanded = false }) => {
 
   const likes = blog.likes ? blog.likes : 0
 
-  const showWhenExpandedStyle = {
-    display: expanded ? '' : 'none'
+  if (expanded) {
+    return (
+      <VStack {...style}>
+        <Heading as='h3' size='lg'>{blog.title}</Heading>
+        <VStack alignItems='from-start'>
+          <CLink href={blog.url} variant='link' isExternal>{blog.url}</CLink>
+          <HStack w='xs' spacing='2'>
+            <Box py='2'>
+              <Text alignt='left' w='max'>likes: {likes} </Text>
+            </Box>
+            <Button w='full' onClick={handleLikePress}>like</Button>
+          </HStack>
+          <Button w='xs' onClick={handleRemovePress}>remove</Button>
+          <p><em>added by {blog.author}</em></p>
+        </VStack>
+      </VStack>
+    )
+  } else {
+    return (
+      <VStack align ='from-start' w='full'>
+        <Link to={`/blogs/${blog._id}`} >{blog.title} {blog.author} </Link>
+      </VStack>
+    )
   }
-
-  const blogStyle = {
-    paddingTop: 10,
-    paddingLeft: 2,
-    border: 'solid',
-    borderWidth: expanded ? 0 : 1,
-    marginBottom: 5
-  }
-
-  return (
-    <div style={blogStyle}>
-      {expanded
-        ? <h2>{blog.title}</h2>
-        : <Link to={`/blogs/${blog._id}`} >{blog.title} {blog.author} </Link>}
-      <div style={showWhenExpandedStyle}>
-        <Link to={blog.url} >{blog.url}</Link> <br />
-        likes: {likes} <button onClick={handleLikePress}>like</button> <br />
-        <button onClick={handleRemovePress}>remove</button>
-        {expanded ? <p><em>added by {blog.author}</em></p> : null}
-      </div>
-    </div>
-  )}
+}
 
 export default Blog

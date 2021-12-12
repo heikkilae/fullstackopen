@@ -3,16 +3,27 @@ import { Link } from 'react-router-dom'
 
 import UserPanel from './UserPanel'
 
+import { HStack, Button, Spacer } from '@chakra-ui/react'
+
 const Navigation = () => {
-  const background = { background: 'lightgrey', display: 'flex' }
-  const padding = { padding: 5 }
+  const navigationStyle = {
+    px: '5',
+    py:'2',
+    shadow: 'md',
+    spacing: '5'
+  }
+
+  const buttonStyle = {
+    variant: 'link'
+  }
 
   return (
-    <div style={background}>
-      <Link style={padding} to="/">blogs</Link>
-      <Link style={padding} to="/users">users</Link>
-      <UserPanel style={padding} />
-    </div>
+    <HStack {...navigationStyle}>
+      <Button {...buttonStyle} as={Link} to="/">blogs</Button>
+      <Button {...buttonStyle} as={Link} to="/users">users</Button>
+      <Spacer />
+      <UserPanel />
+    </HStack>
   )
 }
 

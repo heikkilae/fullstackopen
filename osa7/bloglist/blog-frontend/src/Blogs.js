@@ -2,14 +2,15 @@ import React, { useRef, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 
-import { initializeBlogs, addBlog, updateBlog, removeBlog } from './reducers/blogsReducer'
+import { VStack } from '@chakra-ui/layout'
 
+import { initializeBlogs, addBlog, updateBlog, removeBlog } from './reducers/blogsReducer'
 import Togglable from './components/Togglable'
 import BlogForm from './components/blogs/BlogForm'
 import BlogList from './components/blogs/BlogList'
 import Blog from './components/blogs/Blog'
 
-const Blogs = () => {
+const Blogs = ({ basicPageBoxStyle }) => {
   const blogs = useSelector(state => state.blogs)
   const dispatch = useDispatch()
   const blogFormRef = useRef()
@@ -37,6 +38,7 @@ const Blogs = () => {
     return (
       <Blog
         blog={blog}
+        style={basicPageBoxStyle}
         likeClicked={blogLiked}
         remove={(id) => {
           dispatch(removeBlog(id))
@@ -50,12 +52,12 @@ const Blogs = () => {
   blogs.sort((a, b) => (a.likes < b.likes) ? 1 : -1)
 
   return (
-    <div>
+    <VStack {...basicPageBoxStyle}>
       <Togglable buttonLabel='create new blog' ref={blogFormRef}>
         <BlogForm handleSubmit={createBlog} />
       </Togglable>
       <BlogList blogs={blogs} onBlogLiked={blogLiked} onRemoveBlog={(id) => dispatch(removeBlog(id))} />
-    </div>
+    </VStack>
   )
 }
 

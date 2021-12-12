@@ -1,30 +1,40 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import {
+  VStack,
+  Heading,
+  Table,
+  Thead,
+  Tbody,
+  Tr,
+  Th,
+  Td,
+} from '@chakra-ui/react'
 
-const UserTable = ({ users }) => {
+const UserTable = ({ users, style }) => {
   return (
-    <div>
-      <h2>Users</h2>
+    <VStack {...style}>
+      <Heading as='h3' size='lg'>Users</Heading>
       {users && users.length > 0 ?
-        <table>
-          <thead>
-            <tr>
-              <th></th>
-              <th>blogs created</th>
-            </tr>
-          </thead>
-          <tbody>
+        <Table variant='striped'>
+          <Thead>
+            <Tr>
+              <Th>user</Th>
+              <Th>blogs created</Th>
+            </Tr>
+          </Thead>
+          <Tbody>
             {users.map(user =>
-              <tr key={user.id}>
-                <td>
+              <Tr key={user.id}>
+                <Td>
                   <Link to={`/users/${user.id}`} > {user.name}</Link>
-                </td>
-                <td>{user.blogs.length}</td>
-              </tr>)}
-          </tbody>
-        </table>
+                </Td>
+                <Td>{user.blogs.length}</Td>
+              </Tr>)}
+          </Tbody>
+        </Table>
         : null}
-    </div>
+    </VStack>
   )
 }
 
