@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useQuery } from '@apollo/client'
-import { ALL_AUTHORS } from '../queries' 
+import { ALL_AUTHORS } from '../queries'
+import AuthorForm from './AuthorForm'
 
 const Authors = (props) => {
   const [authors, setAuthors] = useState(null)
@@ -41,7 +42,7 @@ const Authors = (props) => {
           )}
         </tbody>
       </table>
-
+      <AuthorForm show={true} />
     </div>
   )
 }
