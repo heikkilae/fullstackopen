@@ -1,5 +1,17 @@
 const { ApolloServer, UserInputError, gql } = require('apollo-server')
-const { v4: uuidv4 } = require('uuid');
+const config = require('./utils/config')
+const mongoose = require('mongoose')
+
+const Book = require('./models/book')
+const Author = require('./models/author')
+
+mongoose.connect(config.MONGODB_URI)
+  .then(() => {
+    console.log('connected to MongoDB')
+  })
+  .catch((error) => {
+    console.log('error connection to MongoDB:', error.message)
+  })
 
 let authors = [
   {
@@ -88,9 +100,9 @@ const typeDefs = gql`
   type Book {
     title: String!
     published: Int!
-    author: String!
-    id: ID!
+    author: Author!
     genres: [String!]!
+    id: ID!
   }
 
   type Author {
@@ -126,9 +138,8 @@ const resolvers = {
   Query: {
     bookCount: () => books.length,
     authorCount: () => authors.length,
-    allBooks: (root, args) => {
-      console.log(books)
-      let ret = books
+    allBooks: async (root, args) => {
+      let ret = await Book.find({})
 
       if (args.author) {
         ret = ret.filter(b => b.author === args.author)
@@ -140,33 +151,52 @@ const resolvers = {
 
       return ret;
     },
-    allAuthors: () =>  authors.map(author => {
-      const bookCount = books.filter(book => 
-          book.author === author.name
-        ).length
-      return {
-        ...author,
-        bookCount: bookCount
-      }
-    })
+    allAuthors: async () =>  {
+      const authors = await Author.find({})
+      // authors.map(author => {
+      //   const bookCount = books.filter(book => 
+      //       book.author === author.name
+      //     ).length
+      //   return {
+      //     ...author,
+      //     bookCount: bookCount
+      //   }
+      // })
+      return authors
+    }
   },
   Mutation: {
-    addBook: (root, args) => {
-      if (books.find(b => b.title === args.title)) {
-        throw new UserInputError('Book title must be unique', {
-          invalidArgs: args.title,
+    addBook: async (root, args) => {
+      // if (books.find(b => b.title === args.title)) {
+      //   throw new UserInputError('Book title must be unique', {
+      //     invalidArgs: args.title,
+      //   })
+      // }
+
+      let author = await Author.findOne({ name: args.author })
+      if (!author) {
+        const newAuthor = new Author({ name: args.author })
+        
+        author = await newAuthor.save()
+          .catch(error => {
+            throw new UserInputError(error.message, {
+              invalidArgs: args,
+            })
+          })
+      }
+
+      const newBook = new Book({ 
+        title: args.title,
+        published: args.published,
+        author: author,
+        genres: args.genres
+       })
+      return await newBook.save()
+        .catch(error => {
+          throw new UserInputError(error.message, {
+            invalidArgs: args,
+          })
         })
-      }
-
-      if (!authors.find(a => a.name === args.author)) {
-        const newAuthor = { name: args.author, id: uuidv4() }
-        authors = authors.concat(newAuthor)
-      }
-
-      const newBook = {...args, id: uuidv4()}
-      books = books.concat(newBook)
-
-      return newBook
     },
     editAuthor: (root, args) => {
       let author = authors.find(a => a.name === args.name)
