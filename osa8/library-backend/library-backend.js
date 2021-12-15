@@ -136,8 +136,8 @@ const typeDefs = gql`
 
 const resolvers = {
   Query: {
-    bookCount: () => books.length,
-    authorCount: () => authors.length,
+    bookCount: () => Book.collection.countDocuments(),
+    authorCount: () => Author.collection.countDocuments(),
     allBooks: async (root, args) => {
       let ret = await Book.find({})
 
@@ -152,27 +152,17 @@ const resolvers = {
       return ret;
     },
     allAuthors: async () =>  {
-      const authors = await Author.find({})
-      // authors.map(author => {
-      //   const bookCount = books.filter(book => 
-      //       book.author === author.name
-      //     ).length
-      //   return {
-      //     ...author,
-      //     bookCount: bookCount
-      //   }
-      // })
+      let authors = await Author.find({})
+      authors = authors.map(author => {
+        const bookCount = books.filter(book => book.author === author.name).length
+        author.bookCount = bookCount
+        return author
+      })
       return authors
     }
   },
   Mutation: {
     addBook: async (root, args) => {
-      // if (books.find(b => b.title === args.title)) {
-      //   throw new UserInputError('Book title must be unique', {
-      //     invalidArgs: args.title,
-      //   })
-      // }
-
       let author = await Author.findOne({ name: args.author })
       if (!author) {
         const newAuthor = new Author({ name: args.author })
@@ -198,23 +188,17 @@ const resolvers = {
           })
         })
     },
-    editAuthor: (root, args) => {
-      let author = authors.find(a => a.name === args.name)
-      
-      if (!author) {
-        return null
-      }
-
-      authors = authors.map(a => {
-        if (a.name === args.name) {
-          author = { ...args }
-          return author
-        } else {
-          return a
-        }
+    editAuthor: async (root, args) => {
+      const { name, born } = args
+      return await Author.findOneAndUpdate(
+        { name }, 
+        { born },
+        { new: true })
+      .catch(error => {
+        throw new UserInputError(error.message, {
+          invalidArgs: args,
+        })
       })
-
-      return author
     }
   }
 }
