@@ -16,19 +16,19 @@ mongoose.connect(config.MONGODB_URI)
   })
 
 const typeDefs = gql`
+  type Author {
+    name: String!
+    id: ID!
+    bookCount: Int!
+    born: Int
+  }
+
   type Book {
     title: String!
     published: Int!
     author: Author!
     genres: [String!]!
     id: ID!
-  }
-
-  type Author {
-    name: String!
-    id: ID!
-    bookCount: Int!
-    born: Int
   }
 
   type User {
@@ -77,7 +77,7 @@ const resolvers = {
     bookCount: () => Book.collection.countDocuments(),
     authorCount: () => Author.collection.countDocuments(),
     allBooks: async (root, args) => {
-      let ret = await Book.find({})
+      let ret = await Book.find({}).populate('author')
 
       if (args.author) {
         ret = ret.filter(b => b.author === args.author)
@@ -87,9 +87,11 @@ const resolvers = {
         ret = ret.filter(b => b.genres.includes(args.genre))
       }
 
+      console.log('author', ret.author)
+
       return ret;
     },
-    allAuthors: async () =>  {
+    allAuthors: async () => {
       let authors = await Author.find({})
       const books = await Book.find({})
       authors = authors.map(author => {
