@@ -11,6 +11,11 @@ const App = () => {
   const [token, setToken] = useState(null)
   const client = useApolloClient()
 
+  const login = (token) => {
+    setToken(token)
+    setPage('recommended')
+  }
+
   const logout = () => {
     setToken(null)
     localStorage.clear()
@@ -19,27 +24,25 @@ const App = () => {
     client.resetStore()
   }
 
-  if (!token) {
-    return (
-      <div>
-        <h2>Login</h2>
-        <LoginForm
-          setToken={setToken}
-          setError={(message) => console.log('Login error', message)}
-        />
-      </div>
-    )
-  }
-
   return (
     <div>
-      <div>
+      <div style={{display: "flex"}}>
         <button onClick={() => setPage('authors')}>authors</button>
         <button onClick={() => setPage('books')}>books</button>
-        <button onClick={() => setPage('add')}>add book</button>
-        <button onClick={() => setPage('recommended')}>recommend</button>
-        {token ? <button onClick={logout}>logout</button> : null}
+      {token ? 
+        <div>
+          <button onClick={() => setPage('add')}>add book</button>
+          <button onClick={() => setPage('recommended')}>recommend</button>
+          <button onClick={logout}>logout</button>
+        </div> 
+        : <button onClick={() => setPage('login')}>login</button>}
       </div>
+
+     <LoginForm
+        show={page === 'login'}
+        setToken={(token) => login(token)}
+        setError={(message) => console.log('Login error', message)}
+      />
 
       <Authors
         show={page === 'authors'}
