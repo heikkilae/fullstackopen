@@ -15,6 +15,12 @@ const Recommendations = props => {
     }
   }, [result.data])
 
+  useEffect(() => {
+    if (props.show) {
+      result.refetch()
+    }
+  }, [props.show]) // eslint-disable-line
+
   if (!props.show || !user) {
     return null
   }

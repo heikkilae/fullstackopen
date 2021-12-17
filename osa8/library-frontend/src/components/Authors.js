@@ -14,6 +14,12 @@ const Authors = (props) => {
       setAuthors([])
     }
   }, [result.data])
+
+  useEffect(() => {
+    if (props.show) {
+      result.refetch()
+    }
+  }, [props.show]) // eslint-disable-line
   
   if (!props.show || !authors) {
     return null

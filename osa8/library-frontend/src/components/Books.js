@@ -23,6 +23,12 @@ const Books = (props) => {
     result.refetch()
   }, [selectedGenre]) // eslint-disable-line
 
+  useEffect(() => {
+    if (props.show) {
+      result.refetch()
+    }
+  }, [props.show]) // eslint-disable-line
+
   if (!props.show || !books) {
     return null
   }
