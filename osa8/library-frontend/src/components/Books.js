@@ -27,12 +27,20 @@ const Books = (props) => {
     return null
   }
 
+  const favoriteGenres = props.favoriteGenres
   const genres = removeDuplicates(books.flatMap(book => book.genres))
+  const locallyFilteredBooks = () => {
+    if (favoriteGenres) {
+      return books.filter(book =>
+        book.genres.filter(genre => favoriteGenres.includes(genre)).length > 0)
+    } else {
+      return books
+    }
+  }
 
   return (
     <div>
-      <h2>books</h2>
-
+      <h2>{props.title ? props.title : 'books'}</h2>
       <table>
         <tbody>
           <tr>
@@ -44,7 +52,7 @@ const Books = (props) => {
               published
             </th>
           </tr>
-          {books.map(a =>
+          {locallyFilteredBooks().map(a =>
             <tr key={a.title}>
               <td>{a.title}</td>
               <td>{a.author.name}</td>
@@ -53,10 +61,12 @@ const Books = (props) => {
           )}
         </tbody>
       </table>
-      {genres.map(genre =>
-        <button key={genre} onClick={() => setSelectedGenre(genre)}>{genre}</button>
-      )}
-      <button onClick={() => setSelectedGenre('')}>all genres</button>
+      {props.hideButtons ? null :
+        <div>
+          {genres.map(genre => <button key={genre} onClick={() => setSelectedGenre(genre)}>{genre}</button>)}
+          <button onClick={() => setSelectedGenre('')}>all genres</button>
+        </div>
+      }
     </div>
   )
 }

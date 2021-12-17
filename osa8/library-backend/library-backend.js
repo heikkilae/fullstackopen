@@ -6,6 +6,7 @@ const jwt = require('jsonwebtoken')
 const Book = require('./models/book')
 const Author = require('./models/author')
 const User = require('./models/user')
+const helper = require('./utils/helper')
 
 mongoose.connect(config.MONGODB_URI)
   .then(() => {
@@ -33,6 +34,7 @@ const typeDefs = gql`
 
   type User {
     username: String!
+    favoriteGenres: [String]!
     id: ID!
   }
 
@@ -105,7 +107,8 @@ const resolvers = {
   },
   Mutation: {
     addBook: async (root, args, context) => {
-      if (!context.currentUser) {
+      const currentUser = context.currentUser
+      if (!currentUser) {
         throw new AuthenticationError("not authenticated")
       }
 
@@ -127,12 +130,18 @@ const resolvers = {
         author: author,
         genres: args.genres
        })
-      return await newBook.save()
-        .catch(error => {
-          throw new UserInputError(error.message, {
-            invalidArgs: args,
-          })
+
+      try {
+        const ret = await newBook.save()
+        const updatedGenres = currentUser.favoriteGenres.concat(newBook.genres)
+        currentUser.favoriteGenres = helper.removeDuplicates(updatedGenres)
+        await currentUser.save()
+        return ret
+      } catch (error) {
+        throw new UserInputError(error.message, {
+          invalidArgs: args,
         })
+      }
     },
     editAuthor: async (root, args, context) => {
       if (!context.currentUser) {
@@ -186,7 +195,7 @@ const server = new ApolloServer({
       const decodedToken = jwt.verify(
           auth.substring(7), config.JWT_SECRET
         )
-        const currentUser = await User.findById(decodedToken.id)
+        const currentUser = await User.findById(decodedToken.id).populate('favoriteGenres')
         return { currentUser }
       }
     }
