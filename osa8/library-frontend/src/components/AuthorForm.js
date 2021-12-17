@@ -9,6 +9,9 @@ const AuthorForm = (props) => {
 
   const  [createBook] = useMutation(EDIT_AUTHOR, {
     refetchQueries: [{ query: ALL_AUTHORS }],
+    onError: (error) => {
+      console.log('edit author error', error.graphQLErrors[0].message)
+    },
   })
 
   if (!props.show || !props.authors) {
