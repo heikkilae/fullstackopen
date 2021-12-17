@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { useApolloClient } from '@apollo/client'
 import Authors from './components/Authors'
 import Books from './components/Books'
 import NewBook from './components/NewBook'
@@ -7,6 +8,15 @@ import LoginForm from './components/LoginForm'
 const App = () => {
   const [page, setPage] = useState('authors')
   const [token, setToken] = useState(null)
+  const client = useApolloClient()
+
+  const logout = () => {
+    setToken(null)
+    localStorage.clear()
+    // Välimuistin nollaaminen tapahtuu Apollon client-objektin metodilla resetStore, 
+    // clientiin taas päästään käsiksi hookilla useApolloClient
+    client.resetStore()
+  }
 
   if (!token) {
     return (
@@ -26,7 +36,7 @@ const App = () => {
         <button onClick={() => setPage('authors')}>authors</button>
         <button onClick={() => setPage('books')}>books</button>
         <button onClick={() => setPage('add')}>add book</button>
-        {token ? <button onClick={() => setToken(null)}>logout</button> : null}
+        {token ? <button onClick={logout}>logout</button> : null}
       </div>
 
       <Authors

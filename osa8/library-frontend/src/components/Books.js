@@ -2,10 +2,14 @@
 import React, { useState, useEffect } from 'react'
 import { useQuery } from '@apollo/client'
 import { ALL_BOOKS } from '../queries' 
+import { removeDuplicates } from '../utils/helper'
 
 const Books = (props) => {
-  const [books, setBooks] = useState(null)
-  const result = useQuery(ALL_BOOKS)
+  const [ books, setBooks ] = useState(null)
+  const [ selectedGenre, setSelectedGenre ] = useState('')
+  const result = useQuery(ALL_BOOKS, {
+    variables: { genre: selectedGenre ? selectedGenre : null }
+  })
 
   useEffect(() => {
     if (result.data && result.data.allBooks !== null) {
@@ -15,9 +19,15 @@ const Books = (props) => {
     }
   }, [result.data])
 
+  useEffect(() => {
+    result.refetch()
+  }, [selectedGenre]) // eslint-disable-line
+
   if (!props.show || !books) {
     return null
   }
+
+  const genres = removeDuplicates(books.flatMap(book => book.genres))
 
   return (
     <div>
@@ -43,6 +53,10 @@ const Books = (props) => {
           )}
         </tbody>
       </table>
+      {genres.map(genre =>
+        <button key={genre} onClick={() => setSelectedGenre(genre)}>{genre}</button>
+      )}
+      <button onClick={() => setSelectedGenre('')}>all genres</button>
     </div>
   )
 }

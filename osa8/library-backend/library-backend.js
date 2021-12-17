@@ -87,8 +87,6 @@ const resolvers = {
         ret = ret.filter(b => b.genres.includes(args.genre))
       }
 
-      console.log('author', ret.author)
-
       return ret;
     },
     allAuthors: async () => {
