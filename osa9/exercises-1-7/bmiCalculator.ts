@@ -10,7 +10,7 @@ const between = (value: number,  min: number, max: number): boolean  => {
     }
 }
 
-const calculateBmi = (height: number, weight: number): string => {
+ export const calculateBmi = (height: number, weight: number): string => {
     let bmi = weight / Math.pow((height / 100), 2)
     bmi = Math.round((bmi * 10) / 10)
 
