@@ -15,7 +15,6 @@ interface Rating {
 
 const calculateExercises = (hours: Array<number>): Stats => {
     const rating = (average: number, target: number): Rating => {
-        console.log(average, target)
         if (average > target) return { grade: 3, explaining: 'sick awesome!' };
         if (average < target) return { grade: 1, explaining: 'you can do better' };
         if (average === target) return { grade: 2, explaining: 'not too bad but could be better' };
