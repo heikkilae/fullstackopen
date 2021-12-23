@@ -24,20 +24,20 @@ const parseArguments = (args: Array<string>): Exercises => {
     let target;
 
     if (!isNaN(Number(args[2]))) {
-        target = Number(args[2])
+        target = Number(args[2]);
     } else {
-        throw new Error('Target value is not number')
+        throw new Error('Target value is not number');
     }
 
     const hours = args.slice(3).map(h => {
         if (isNaN(Number(h))) {
-            throw new Error('One of hour values is not number')
+            throw new Error('One of hour values is not number');
         }
-        return Number(h)
-    })
+        return Number(h);
+    });
 
-    return { target, hours }
-}
+    return { target, hours };
+};
 
 const calculateExercises = (hours: Array<number>, target: number): Stats => {
     const rating = (average: number, target: number): Rating => {
@@ -45,12 +45,12 @@ const calculateExercises = (hours: Array<number>, target: number): Stats => {
         if (average < target) return { grade: 1, explaining: 'you can do better' };
         if (average === target) return { grade: 2, explaining: 'not too bad but could be better' };
         return { grade: 0, explaining: '' };
-    }
+    };
     
-    const totalHours = hours.reduce((p, c) => p + c)
-    const average = totalHours / hours.length
-    const ratingObj = rating(Math.ceil(average), target)
-    const trainingDays = hours.length - hours.filter(h => h === 0).length
+    const totalHours = hours.reduce((p, c) => p + c);
+    const average = totalHours / hours.length;
+    const ratingObj = rating(Math.ceil(average), target);
+    const trainingDays = hours.length - hours.filter(h => h === 0).length;
     
     const ret = {
         periodLength: hours.length,
@@ -60,16 +60,16 @@ const calculateExercises = (hours: Array<number>, target: number): Stats => {
         success: average >= target,
         rating: ratingObj.grade,
         ratingDescription: ratingObj.explaining
-    }
+    };
 
-    return ret
-}
+    return ret;
+};
 
 try {
     const { target, hours }= parseArguments(process.argv);
-    console.log(calculateExercises(hours, target))
+    console.log(calculateExercises(hours, target));
 } catch (error: unknown) {
-    let errorMessage = 'Something bad happened.'
+    let errorMessage = 'Something bad happened.';
     if (error instanceof Error) {
       errorMessage += ' Error: ' + error.message;
     }
