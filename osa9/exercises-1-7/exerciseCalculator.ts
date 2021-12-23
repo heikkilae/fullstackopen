@@ -1,4 +1,4 @@
-interface Stats {
+export interface Stats {
     periodLength: number;
     trainingDays: number;
     success: boolean;
@@ -39,7 +39,7 @@ const parseArguments = (args: Array<string>): Exercises => {
     return { target, hours };
 };
 
-const calculateExercises = (hours: Array<number>, target: number): Stats => {
+export const calculateExercises = (hours: Array<number>, target: number): Stats => {
     const rating = (average: number, target: number): Rating => {
         if (average > target) return { grade: 3, explaining: 'sick awesome!' };
         if (average < target) return { grade: 1, explaining: 'you can do better' };
