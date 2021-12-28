@@ -1,11 +1,11 @@
 import diagnoses from '../../data/diagnoses';
-import { Diagnose, DiagnoseEntry } from '../types';
+import { NonSensitiveDiagnoseEntry, DiagnoseEntry } from '../types';
 
 const getEntries = (): Array<DiagnoseEntry> => {
   return diagnoses;
 };
 
-const getSensitiveEntries = (): Diagnose[] => {
+const getNonSensitiveEntries = (): NonSensitiveDiagnoseEntry[] => {
   return diagnoses.map(({ code, name }) => ({
     code,
     name
@@ -19,5 +19,5 @@ const addEntry = () => {
 export default {
   getEntries,
   addEntry,
-  getSensitiveEntries
+  getNonSensitiveEntries
 };
