@@ -1,8 +1,7 @@
-
-
 import { PatientorEntry } from "../src/types";
+import toNewPatientEntry from "../src/utils";
 
-const patientorEntries: Array<PatientorEntry> = [
+const data = [
     {
         "id": "d2773336-f723-11e9-8f0b-362b9e155667",
         "name": "John McClane",
@@ -44,5 +43,13 @@ const patientorEntries: Array<PatientorEntry> = [
         "occupation": "Digital evangelist"
     }
 ];
+
+const patientorEntries: PatientorEntry [] = data.map(obj => {
+    // toNewPatientEntry returns object, so need to assert it
+    const object = toNewPatientEntry(obj) as PatientorEntry;
+    object.id = obj.id;
+    return object;
+});
+
 
 export default patientorEntries;
