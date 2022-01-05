@@ -3,7 +3,7 @@ interface HeaderProps {
 }
 
 const Header = (props: HeaderProps) => {
-  return(<h1>{props.courseName}</h1>)
-}
+  return <h1>{props.courseName}</h1>;
+};
 
-export default Header
+export default Header;

@@ -1,16 +1,16 @@
-import { CourseParts } from '../types'
+import { CoursePart } from "../types";
 
 interface TotalProps {
-  courseParts: Array<CourseParts>
+  courseParts: Array<CoursePart>;
 }
 
 const Total = ({ courseParts }: TotalProps) => {
-  return(
-  <p>
-    Number of exercises{" "}
-    {courseParts.reduce((carry, part) => carry + part.exerciseCount, 0)}
-  </p>
-  )
-}
+  return (
+    <p>
+      Number of exercises{" "}
+      {courseParts.reduce((carry, part) => carry + part.exerciseCount, 0)}
+    </p>
+  );
+};
 
-export default Total
+export default Total;
