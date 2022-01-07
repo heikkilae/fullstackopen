@@ -23,3 +23,11 @@ export interface PatientorEntry {
 
 export type NewPatientEntry = Omit<PatientorEntry, 'id'>;
 export type NonSensitivePatientorEntry = Omit<PatientorEntry, 'ssn'>;
+
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+export interface Entry {
+}
+
+export interface Patient extends PatientorEntry {
+  entries: Entry[]
+}
