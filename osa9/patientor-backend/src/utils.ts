@@ -1,4 +1,4 @@
-import { NewPatientEntry, Gender } from './types';
+import { Gender, NewPatientEntryWithEntries, Entry } from './types';
 
 const isString = (text: unknown): text is string => {
   return typeof text === 'string' || text instanceof String;
@@ -37,13 +37,26 @@ const parseGender = (gender: unknown): Gender => {
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const toNewPatientEntry = (object: any): NewPatientEntry => {
-  const newEntry: NewPatientEntry = {
+const isEntry = (entry: any): entry is Entry => {
+  return (<Entry>entry).id !== undefined;
+};
+
+const parseEntries = (entries: unknown): Array<Entry> => {
+  if (!entries) throw new Error('Entries not defined');
+  if (!Array.isArray(entries)) throw new Error('entries is not array');
+  if (!entries.every(e => isEntry(e))) throw new Error(`One of entries is not type of Entry`);
+  return entries.map(e => e as Entry);
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const toNewPatientEntry = (object: any): NewPatientEntryWithEntries => {
+  const newEntry: NewPatientEntryWithEntries = {
     name: parseString('name', object.name),
     ssn: parseString('ssn', object.ssn),
     dateOfBirth: parseDate(object.dateOfBirth),
     gender: parseGender(object.gender),
-    occupation: parseString('occupation', object.occupation)
+    occupation: parseString('occupation', object.occupation),
+    entries: parseEntries(object.entries)
   };
 
   return newEntry;
