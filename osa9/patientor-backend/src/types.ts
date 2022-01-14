@@ -4,13 +4,13 @@ export interface DiagnoseEntry {
   latin?: string;
 }
 
-export type NonSensitiveDiagnoseEntry = Omit<DiagnoseEntry, 'latin'>;
+export type NonSensitiveDiagnoseEntry = Omit<DiagnoseEntry, "latin">;
 
 export enum Gender {
-  Male = 'male',
-  Female = 'female',
-  Other = 'other'
-} 
+  Male = "male",
+  Female = "female",
+  Other = "other",
+}
 
 export interface PatientorEntry {
   id: string;
@@ -21,8 +21,8 @@ export interface PatientorEntry {
   occupation: string;
 }
 
-export type NewPatientEntry = Omit<PatientorEntry, 'id'>;
-export type NonSensitivePatientorEntry = Omit<PatientorEntry, 'ssn'>;
+export type NewPatientEntry = Omit<PatientorEntry, "id">;
+export type NonSensitivePatientorEntry = Omit<PatientorEntry, "ssn">;
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface Diagnosis {
@@ -41,17 +41,17 @@ export enum HealthCheckRating {
   "Healthy" = 0,
   "LowRisk" = 1,
   "HighRisk" = 2,
-  "CriticalRisk" = 3
+  "CriticalRisk" = 3,
 }
 
 export interface SickLeave {
-  startDate: string,
-  endDate: string,
+  startDate: string;
+  endDate: string;
 }
 
 export interface Discharge {
-  date: string,
-  criteria: string,
+  date: string;
+  criteria: string;
 }
 
 export interface HealthCheckEntry extends BaseEntry {
@@ -79,7 +79,13 @@ export interface Patient extends PatientorEntry {
   entries: Entry[];
 }
 
-export type NewEntry = Omit<Entry, 'id'>;
+export type NewEntry = Omit<Entry, "id">;
+export type NewHospitalEntry = Omit<HospitalEntry, "id">;
+export type NewOccupationalHealthcareEntry = Omit<
+  OccupationalHealthcareEntry,
+  "id"
+>;
+export type NewHealthCheckEntry = Omit<HealthCheckEntry, "id">;
 
 export interface NewPatientEntryWithEntries extends NewPatientEntry {
   entries: Entry[];
